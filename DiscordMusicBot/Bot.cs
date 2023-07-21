@@ -47,7 +47,11 @@ namespace DiscordMusicBot
                 StringPrefixes = new string[] { configJson.Prefix },
                 EnableMentionPrefix = true,
                 EnableDms = true,
+                EnableDefaultHelp = false
             };
+
+            Commands = Client.UseCommandsNext(commandsConfig);
+
 
             await Client.ConnectAsync();
             await Task.Delay(-1);
