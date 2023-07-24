@@ -1,4 +1,6 @@
-﻿using DSharpPlus;
+﻿using DiscordMusicBot.Commands;
+using DiscordMusicBot.Config;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
@@ -20,18 +22,22 @@ namespace DiscordMusicBot
 
         public CommandsNextExtension Commands { get; private set; }
 
-
+        
         public async Task RunAsync()
         {
+            var configJsonFile = new ConfigJSONReader();
+
             var json = string.Empty;
             using (var fs = File.OpenRead("config.json"))
             using (var sr = new StreamReader(fs, new UTF8Encoding(false)))
                 json = await sr.ReadToEndAsync();
 
             var configJson = JsonConvert.DeserializeObject<ConfigJSON>(json);
+
             var config = new DiscordConfiguration()
             {
-                Token = configJson.Token,
+                Intents = DiscordIntents.All,
+                Token = configJsonFile.token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
             };
@@ -44,13 +50,15 @@ namespace DiscordMusicBot
 
             var commandsConfig = new CommandsNextConfiguration()
             {
-                StringPrefixes = new string[] { configJson.Prefix },
+                StringPrefixes = new string[] { configJsonFile.prefix }, 
                 EnableMentionPrefix = true,
                 EnableDms = true,
                 EnableDefaultHelp = false
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
+
+            Commands.RegisterCommands<FunCommands>();
 
 
             await Client.ConnectAsync();
