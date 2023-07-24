@@ -15,7 +15,7 @@ namespace DiscordMusicBot.Config
 
         public ConfigJSONReader()
         {
-            using (StreamReader  sr = new StreamReader("config.json"))
+            using (StreamReader sr = new StreamReader("config.json"))
             {
                 string json = sr.ReadToEnd();
                 ConfigJSON obj = JsonConvert.DeserializeObject<ConfigJSON>(json);

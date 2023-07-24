@@ -2,7 +2,7 @@
 
 namespace DiscordMusicBot
 {
-    internal struct ConfigJSON
+    public struct ConfigJSON
     {
         [JsonProperty("token")]
         public string Token { get; private set; }

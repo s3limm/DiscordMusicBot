@@ -22,7 +22,7 @@ namespace DiscordMusicBot
 
         public CommandsNextExtension Commands { get; private set; }
 
-        
+
         public async Task RunAsync()
         {
             var configJsonFile = new ConfigJSONReader();
@@ -50,7 +50,7 @@ namespace DiscordMusicBot
 
             var commandsConfig = new CommandsNextConfiguration()
             {
-                StringPrefixes = new string[] { configJsonFile.prefix }, 
+                StringPrefixes = new string[] { configJsonFile.prefix },
                 EnableMentionPrefix = true,
                 EnableDms = true,
                 EnableDefaultHelp = false
