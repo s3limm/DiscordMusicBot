@@ -60,7 +60,7 @@ namespace DiscordMusicBot
 
             Commands.RegisterCommands<FunCommands>();
 
-
+            
             await Client.ConnectAsync();
             await Task.Delay(-1);
         }

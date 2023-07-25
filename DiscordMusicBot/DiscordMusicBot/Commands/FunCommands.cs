@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +59,19 @@ namespace DiscordMusicBot.Commands
         {
             int result = number1 / number2;
             await ctx.Channel.SendMessageAsync(result.ToString());
+        }
+
+        [Command("embedmessage")]
+        public async Task EmbedMessage(CommandContext ctx)
+        {
+            var embedmessage = new DiscordEmbedBuilder()
+            {
+                Title = "Bu başlıktır.",
+                Description = "Bu açıklamadır",
+                Color = DiscordColor.Azure,
+            };
+
+            await ctx.Channel.SendMessageAsync(embedmessage);
         }
     }
 }
