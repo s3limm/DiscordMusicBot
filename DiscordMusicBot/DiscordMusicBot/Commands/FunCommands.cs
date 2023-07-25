@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using DSharpPlus.Interactivity.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,89 @@ namespace DiscordMusicBot.Commands
             };
 
             await ctx.Channel.SendMessageAsync(embedmessage);
+        }
+
+
+
+        [Command("anket")]
+        public async Task Poll(CommandContext ctx, int TimeLimit, string Option1, string Option2, string Option3, string Option4, string Question)
+        {
+            var interactvity = ctx.Client.GetInteractivity(); // Kullanıcıdan değer alındığı kısım.
+            TimeSpan timer = TimeSpan.FromSeconds(TimeLimit); // Sayacın oluşturulduğu kısım.
+
+            DiscordEmoji[] optionEmojis ={ DiscordEmoji.FromName(ctx.Client, ":one:", false),
+                                           DiscordEmoji.FromName(ctx.Client, ":two:", false),
+                                           DiscordEmoji.FromName(ctx.Client, ":three:", false),
+                                           DiscordEmoji.FromName(ctx.Client, ":four:", false)};
+
+
+            string optionStrings = optionEmojis[0] + " | " + Option1 + "\n" +
+                                   optionEmojis[1] + " | " + Option2 + "\n" +
+                                   optionEmojis[2] + " | " + Option3 + "\n" +
+                                   optionEmojis[3] + " | " + Option4 ;
+
+            var pollMessage = new DiscordEmbedBuilder()
+            {
+                Title = " " + Question,
+                Description = optionStrings,
+                Color = DiscordColor.Azure
+            };
+
+            var putReactOn = await ctx.Channel.SendMessageAsync(pollMessage);
+
+            foreach (var emoji in optionEmojis)
+            {
+                await putReactOn.CreateReactionAsync(emoji);
+            }
+
+            var result = await interactvity.CollectReactionsAsync(putReactOn, timer);
+
+            int count1 = 0;
+            int count2 = 0;
+            int count3 = 0;
+            int count4 = 0;
+
+            foreach (var emoji in result)
+            {
+                if(emoji.Emoji == optionEmojis[0])
+                {
+                    count1++;
+                }
+
+                if (emoji.Emoji == optionEmojis[1])
+                {
+                    count2++;
+                }
+                
+                if (emoji.Emoji == optionEmojis[2])
+                {
+                    count3++;
+                }
+
+                if (emoji.Emoji == optionEmojis[3])
+                {
+                    count4++;
+                }
+            }
+
+            int totalVotes = count1 + count2 + count3 + count4;
+
+
+            string resultString = optionEmojis[0] + ":  " +  count1 + " Oy \n" +
+                optionEmojis[1] + ":  " + count2 + " Oy \n" +
+                optionEmojis[2] + ":  " + count3 + " Oy \n" +
+                optionEmojis[3] + ":  " + count4 + " Oy \n\n" + "Toplam oy sayısı : " + totalVotes;
+
+            var resultMessage = new DiscordEmbedBuilder()
+            {
+                Color = DiscordColor.Green,
+                Title = "Oylamanın sonucu",
+                Description = resultString
+                
+            };
+
+            await ctx.Channel.SendMessageAsync(resultMessage);
+
         }
     }
 }
