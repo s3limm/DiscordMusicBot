@@ -1,5 +1,6 @@
 ﻿using DiscordMusicBot.Commands;
 using DiscordMusicBot.Config;
+using DiscordMusicBot.External_Classes;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
@@ -59,6 +60,7 @@ namespace DiscordMusicBot
             Commands = Client.UseCommandsNext(commandsConfig);
 
             Commands.RegisterCommands<FunCommands>();
+            Commands.RegisterCommands<GameCommands>();
 
             
             await Client.ConnectAsync();
