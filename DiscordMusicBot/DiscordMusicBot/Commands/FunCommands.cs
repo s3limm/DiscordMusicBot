@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 
 namespace DiscordMusicBot.Commands
 {
+    [Cooldown(5, 10, CooldownBucketType.User)]
     public class FunCommands : BaseCommandModule
     {
         [Command("test")]
+       
         public async Task CommandTest(CommandContext ctx)
         {
-            Console.WriteLine("Working...");
             await ctx.Channel.SendMessageAsync("Selam Paşşaaaaam");
         }
 
@@ -72,7 +73,7 @@ namespace DiscordMusicBot.Commands
                 Color = DiscordColor.Azure,
             };
 
-            await ctx.Channel.SendMessageAsync(embedmessage);
+            await ctx.RespondAsync(embedmessage);
         }
 
 

@@ -3,6 +3,9 @@ using DiscordMusicBot.Config;
 using DiscordMusicBot.External_Classes;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.CommandsNext.Exceptions;
+using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
@@ -11,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -62,9 +66,35 @@ namespace DiscordMusicBot
             Commands.RegisterCommands<FunCommands>();
             Commands.RegisterCommands<GameCommands>();
 
-            
+            Commands.CommandErrored += OnCommandError; 
+
             await Client.ConnectAsync();
             await Task.Delay(-1);
+        }
+
+        private async Task OnCommandError(CommandsNextExtension sender, CommandErrorEventArgs e)
+        {
+            if (e.Exception is ChecksFailedException)
+            {
+                var castedException = (ChecksFailedException)e.Exception;
+                string coolDownTimer = string.Empty;
+
+                foreach (var check in castedException.FailedChecks)
+                {
+                    var coolDown = (CooldownAttribute)check;
+                    TimeSpan timeLeft = coolDown.GetRemainingCooldown(e.Context);
+                   coolDownTimer = timeLeft.ToString(@"hh\:mm\:ss");
+                }
+
+                var coolDownMessage = new DiscordEmbedBuilder()
+                {
+                    Title = "Bekleme süresinin bitmesini bekleyin.",
+                    Description = "Bekleme süresi :" + coolDownTimer,
+                    Color = DiscordColor.Red
+                };
+
+                await e.Context.Channel.SendMessageAsync(coolDownMessage);
+            }
         }
 
         private Task OnClientReady(ReadyEventArgs e)
