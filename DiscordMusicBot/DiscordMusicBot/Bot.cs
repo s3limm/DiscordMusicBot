@@ -1,6 +1,7 @@
 ﻿using DiscordMusicBot.Commands;
 using DiscordMusicBot.Config;
 using DiscordMusicBot.External_Classes;
+using DiscordMusicBot.Slash_Commands;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -9,6 +10,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
+using DSharpPlus.SlashCommands;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -62,11 +64,15 @@ namespace DiscordMusicBot
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
+            var slashCommandConfig = Client.UseSlashCommands();
 
             Commands.RegisterCommands<FunCommands>();
             Commands.RegisterCommands<GameCommands>();
 
             Commands.CommandErrored += OnCommandError; 
+
+            //Slash Command
+            slashCommandConfig.RegisterCommands<FunSL>(1133023139958362174);
 
             await Client.ConnectAsync();
             await Task.Delay(-1);

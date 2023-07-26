@@ -1,79 +1,46 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
+﻿using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
+using DSharpPlus.SlashCommands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordMusicBot.Commands
+
+namespace DiscordMusicBot.Slash_Commands
 {
-    [Cooldown(5, 10, CooldownBucketType.User)]
-    public class FunCommands : BaseCommandModule
+    public class FunSL : ApplicationCommandModule
     {
-        [Command("test")]
-
-        public async Task CommandTest(CommandContext ctx)
+        [SlashCommand("test", "Bu ilk Slash komutu")]
+        public async Task SlashCommand(InteractionContext ctx, [Option("string","İstediğin tipte bir şey yaz")]
+                                                               [Choice("Pre-Defined-Text","Selam")]string text)
         {
-            await ctx.Channel.SendMessageAsync("Selam Paşşaaaaam");
-        }
+            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Starting Slash Command...."));
 
-        [Command("selam")]
-        public async Task CommandGreeting(CommandContext ctx)
-        {
-            Console.WriteLine("Working...");
-            await ctx.Channel.SendMessageAsync("Naptın Ahmet");
-        }
-
-        [Command("topla")]
-        public async Task Addition(CommandContext ctx, int number1, int number2)
-        {
-            int result = number1 + number2;
-            await ctx.Channel.SendMessageAsync(result.ToString());
-        }
-
-        [Command("çıkart")]
-        public async Task Subtract(CommandContext ctx, int number1, int number2)
-        {
-            int result = number1 - number2;
-            await ctx.Channel.SendMessageAsync(result.ToString());
-        }
-
-        [Command("çarp")]
-        public async Task Multipy(CommandContext ctx, int number1, int number2)
-        {
-            int result = number1 * number2;
-            await ctx.Channel.SendMessageAsync(result.ToString());
-        }
-
-        [Command("böl")]
-        public async Task Divide(CommandContext ctx, int number1, int number2)
-        {
-            int result = number1 / number2;
-            await ctx.Channel.SendMessageAsync(result.ToString());
-        }
-
-        [Command("embedmessage")]
-        public async Task EmbedMessage(CommandContext ctx)
-        {
-            var embedmessage = new DiscordEmbedBuilder()
+            var embedMessage = new DiscordEmbedBuilder()
             {
-                Title = "Bu başlıktır.",
-                Description = "Bu açıklamadır",
-                Color = DiscordColor.Azure,
+                Title = text
             };
-
-            await ctx.RespondAsync(embedmessage);
+            await ctx.Channel.SendMessageAsync(embedMessage);
         }
 
 
 
-        //[Command("anket")]
-        //[Cooldown(5, 10, CooldownBucketType.User)]
-        //public async Task Poll(CommandContext ctx, int TimeLimit, string Option1, string Option2, string Option3, string Option4, string Question)
+        //[SlashCommand("poll", "Anket oluştur.")]
+        //public async Task PollCommand(InteractionContext ctx, [Option("Soru", "Anket Başlığı")] string Question,
+        //                                                      [Option("BeklemeSüresi", "Anket bekleme süresi")] long TimeLimit,
+        //                                                      [Option("1.Seçenek", "1.Seçenek")] string Option1,
+        //                                                      [Option("2.Seçenek", "2.Seçenek")] string Option2,
+        //                                                      [Option("3.Seçenek", "3.Seçenek")] string Option3,
+        //                                                      [Option("4.Seçenek", "4.Seçenek")] string Option4)
         //{
+        //    await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("..."));
+
+
+
+
         //    var interactvity = ctx.Client.GetInteractivity(); // Kullanıcıdan değer alındığı kısım.
         //    TimeSpan timer = TimeSpan.FromSeconds(TimeLimit); // Sayacın oluşturulduğu kısım.
 
@@ -150,6 +117,7 @@ namespace DiscordMusicBot.Commands
 
         //    await ctx.Channel.SendMessageAsync(resultMessage);
 
-        //}
+        }
     }
-}
+
+
